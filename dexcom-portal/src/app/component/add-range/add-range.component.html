@@ -1,0 +1,26 @@
+
+<ng-template [ngIf]="loginService.checkLogin()">
+<div class="container">
+	<div class="row">
+    <div class="col-md-4">
+      <div class="form_main">
+        <h4 class="heading">Manage CGM ids <span></span></h4>
+        <div class="form">
+          <form (ngSubmit)="onSubmit()" id="contactFrm" name="contactFrm">
+              <input type="text" required="" placeholder="Please input starting range" value="" name="name" [(ngModel)]="range.startRange" class="txt">
+              <input type="text" required="" placeholder="Please input number of CGMs" value="" name="mob"  [(ngModel)]="range.size" class="txt">
+              
+              <h5>Or Add CGM TX IDs comma separated</h5>
+              <textarea rows="4" cols="50" name="comment" [(ngModel)]="range.listOfDevices" placeholder="321452,4234XA,..."></textarea>
+              <input type="submit" value="add" name="submit" class="txt2">
+              <input type="button" (click)="onRemove()" value="remove" name="remove" class="txt2">
+          </form>
+        </div>
+      </div>
+      <div  >
+        <p>{{message}}</p>
+      </div>
+    </div>
+  </div>
+</div> 
+</ng-template>

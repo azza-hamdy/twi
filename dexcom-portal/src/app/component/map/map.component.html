@@ -1,0 +1,21 @@
+<!-- <h3>{{ title }}</h3>
+<div [hidden]="!hide"  >
+    <p>{{message}}</p>
+</div> -->
+<!-- <agm-map [style.visibility]="(hide == true) ? 'hidden' : 'visible'"  -->
+<agm-map 
+   [latitude]="lat" 
+    [longitude]="lng"
+    [zoom]="15"
+    [disableDefaultUI]=false>
+    <agm-marker
+      [latitude]="lat" 
+      [longitude]="lng"
+      [markerDraggable]="false"
+      [iconUrl]="iconUrl"
+      [zIndex]="i"
+      [openInfoWindow]="true"
+      >
+
+    </agm-marker>
+</agm-map>

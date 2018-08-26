@@ -1,0 +1,31 @@
+<!--Pulling Awesome Font -->
+<!--<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">-->
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-offset-3 col-md-6 col-sm-offset-1">
+          <form (ngSubmit)="onSubmit()" [hidden]="loginService.checkLogin()">
+            <div class="form-login">
+                <h4>Welcome back.</h4>
+                <div class="form-group">
+                  <input type="text" id="userName"  name="username" [(ngModel)]="model.username" ngControl="username" class="form-control" placeholder="username" />
+                </div>
+                <div class="form-group">
+                  <input type="password" id="userPassword" name="password"  [(ngModel)]="model.password" ngControl="password" class="form-control" placeholder="password" />
+                </div>
+                <div class="wrapper">
+                  <span class="group-btn">     
+                      <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>     
+                  </span>
+                </div>
+                <br/>
+                <p style="color:red;">{{message}}<p>
+            </div>
+          </form>
+        </div>
+    </div>
+
+    <div [hidden]="!loginService.checkLogin()">
+      <h3>Logged In Successfully! </h3>
+    </div>
+</div>

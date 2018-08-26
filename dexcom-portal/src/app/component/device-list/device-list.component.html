@@ -1,0 +1,65 @@
+<ng-template [ngIf]="devicePage != null">
+    <hr/>
+    <input *ngIf="showGWInfo == false" placeholder="Search" type="text" (keyup.enter)="onSearchKeyPress()" [(ngModel)] = "filteredTXID" />
+    <div id="list" class="row">
+        <div *ngIf="showGWInfo == false" class="table-responsive ol-sm-3 col-md-3">
+            <table class="table table-striped" cellspacing="0" cellpadding="0">
+                <thead>
+                <tr>
+                    <th>CGM TX ID</th>
+                    <th>Last Activity</th>
+                    <th>CGM State</th>
+                </tr>
+                </thead
+                >
+                <tbody> 
+                <tr *ngFor="let device of devicePage.content let i = index" (click)="selectedDeviceId = device.id;selectedRow = i;selectedDevice = device;" [class.active]="i == selectedRow">
+                    <td>{{device.serialId}}</td>
+                    <td>{{getDateWithTimeZone(device.lastActivity)| date: 'yyyy/MM/dd HH:mm:ss'}}</td>
+                    <td><p align="left"><ngb-progressbar  type="success" [value]="getProgressValue(device)">{{getProgressValue(device)}}%</ngb-progressbar></p></td>
+                    <td>{{(device.state=='2')?'Registered':(device.state=='1')?'Inprogress':'Done'}}</td>
+                </tr>
+                </tbody>
+            </table>
+            <app-table-pagination [table]="self" [page]="devicePage"></app-table-pagination>
+        </div>
+        <div class="table-responsive col-sm-9 col-md-9">
+            <app-graph *ngIf="selectedDeviceId && showGWInfo == false" [selectedDeviceId]="selectedDeviceId">
+            </app-graph>
+            
+            <input *ngIf="selectedDeviceId && showGWInfo == false && selectedDevice.gateway"  type="button" name="showMarker" value="Show Gateway Info" class="btn btn-link" (click)="showGWInfo = (showGWInfo == true)?false:true;"> 
+
+            <div *ngIf="showGWInfo == true" class="table-responsive col-sm-5 col-md-5">
+                <h3>Gateway Info for CGM ID : {{selectedDevice.serialNumber}}</h3>    
+                <br/>
+                <table class="table" cellspacing="0" cellpadding="0">
+                    <tbody>
+                        <tr>
+                            <td>Gateway ID </td>
+                            <td>{{selectedDevice.gateway.deviceNumber}}</td>
+                        </tr>
+                        <tr>
+                            <td>Gateway Activation time</td>
+                            <td>{{getDateWithTimeZone(selectedDevice.gateway.dateCreated)| date: 'yyyy/MM/dd HH:mm:ss'}}</td>
+                        </tr>
+                        <tr>
+                            <td>Gateway Last updating</td>
+                            <td>{{getDateWithTimeZone(selectedDevice.lastActivity)| date: 'yyyy/MM/dd HH:mm:ss'}}</td>
+                        </tr>
+                        <tr>
+                            <td>Gateway Firmware version</td>
+                            <td>1.2</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <input type="button" name="showMarker" value="Back" class="btn btn-default" (click)="showGWInfo = (showGWInfo == true)?false:true;"> 
+            </div>
+            <div  *ngIf="showGWInfo == true  && selectedDevice.gateway.lat != 0 && selectedDevice.gateway.lng != 0 " class="table-responsive col-sm-7 col-md-7">
+                <app-map *ngIf="selectedDeviceId" [lat]="selectedDevice.gateway.lat" [lng]="selectedDevice.gateway.lng" >
+                </app-map>
+            </div>
+            
+        </div>
+    </div>
+    
+</ng-template>

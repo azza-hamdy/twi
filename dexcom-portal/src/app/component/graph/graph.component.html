@@ -1,0 +1,15 @@
+<!--<div style.visibility]="(hide == true) ? 'hidden' : 'visible'"  id="cgmReadingChart" style="height: 300px; width: 99.3%;"></div>
+<div [hidden] = "hide" id="insulinDeliveyChart" style="height: 300px; width: 100%;"></div>
+
+<div [hidden] = "!hide" >
+<p>loading....</p>
+</div>-->
+<!-- <div class="loader" [hidden]="myVar"></div> -->
+    <div [hidden]="!hide"  >
+        <p>{{message}}</p>
+    </div>
+        <table [style.visibility]="(hide == true) ? 'hidden' : 'visible'" style="width:100%; height:100%;" align="center">
+            <tr>
+                <td><div  id="cgmReadingChart" style="height: 400px; width: 99.3%;"></div></td>
+            </tr>
+        </table>
