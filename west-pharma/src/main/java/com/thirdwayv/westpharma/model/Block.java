@@ -27,8 +27,6 @@ public class Block implements Serializable {
 
 	private Integer version;
 
-	private Long blockNumber;
-
 	private String previousBlockHash;
 
 	private String topHash;
@@ -56,14 +54,6 @@ public class Block implements Serializable {
 
 	public void setVersion(Integer version) {
 		this.version = version;
-	}
-
-	public Long getBlockNumber() {
-		return blockNumber;
-	}
-
-	public void setBlockNumber(Long blockNumber) {
-		this.blockNumber = blockNumber;
 	}
 
 	public String getPreviousBlockHash() {

@@ -13,6 +13,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import org.postgresql.util.PGobject;
+
 @Entity
 @Table
 public class Transaction implements Serializable {
@@ -39,6 +41,8 @@ public class Transaction implements Serializable {
 	private Integer index;
 
 	private Timestamp creationTime;
+
+	private PGobject transaction;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id", nullable = false)
@@ -114,6 +118,14 @@ public class Transaction implements Serializable {
 
 	public void setCreationTime(Timestamp creationTime) {
 		this.creationTime = creationTime;
+	}
+
+	public PGobject getTransaction() {
+		return transaction;
+	}
+
+	public void setTransaction(PGobject transaction) {
+		this.transaction = transaction;
 	}
 
 	public Block getBlock() {
