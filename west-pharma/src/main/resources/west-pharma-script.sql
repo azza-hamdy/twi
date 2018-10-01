@@ -1,4 +1,3 @@
-
 CREATE SEQUENCE public.block_id_seq
   INCREMENT 1
   MINVALUE 1
@@ -19,16 +18,16 @@ CREATE TABLE public.block
   CONSTRAINT "Primary Key" PRIMARY KEY (id)
 );
 
-CREATE SEQUENCE public.”transaction_id_seq"
+CREATE SEQUENCE public.transaction_id_seq
   INCREMENT 1
   MINVALUE 1
   MAXVALUE 9223372036854775807
   START 1
   CACHE 1;
 
-CREATE TABLE public.”transaction"
+CREATE TABLE public.transaction
 (
-  id bigint NOT NULL DEFAULT nextval(‘”transaction_id_seq"'::regclass),
+  id bigint NOT NULL DEFAULT nextval('transaction_id_seq'::regclass),
   "blockId" bigint NOT NULL,
   version character varying,
   "writerId" character varying NOT NULL,
@@ -43,3 +42,4 @@ CREATE TABLE public.”transaction"
       REFERENCES public.block (id) MATCH SIMPLE
       ON UPDATE CASCADE ON DELETE CASCADE
 );
+
