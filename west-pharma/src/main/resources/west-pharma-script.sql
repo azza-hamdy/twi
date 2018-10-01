@@ -28,7 +28,7 @@ CREATE SEQUENCE public.”transaction_id_seq"
 
 CREATE TABLE public.”transaction"
 (
-  id bigint NOT NULL DEFAULT nextval(‘”transaction_id_seq"'::regclass),
+  id bigint NOT NULL DEFAULT nextval("transaction_id_seq"::regclass),
   "blockId" bigint NOT NULL,
   version character varying,
   "writerId" character varying NOT NULL,
