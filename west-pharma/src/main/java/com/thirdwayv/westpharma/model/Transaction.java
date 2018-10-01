@@ -15,6 +15,8 @@ import javax.persistence.Table;
 
 import org.postgresql.util.PGobject;
 
+import com.thirdwayv.westpharma.dto.TransactionDTO;
+
 @Entity
 @Table
 public class Transaction implements Serializable {
