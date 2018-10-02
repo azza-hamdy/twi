@@ -4,11 +4,11 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class Utils {
-	public static String getHashBySHA256(String... params) throws NoSuchAlgorithmException {
+public class HashingUtils {
+	public static String getHashBySHA256(Object... params) throws NoSuchAlgorithmException {
 		StringBuilder sb = new StringBuilder();
-		for (String s : params) {
-			sb.append(s);
+		for (Object s : params) {
+			sb.append(String.valueOf(s));
 		}
 		MessageDigest digest = MessageDigest.getInstance("SHA-256");
 		byte[] encodedhash = digest.digest(sb.toString().getBytes(StandardCharsets.UTF_8));

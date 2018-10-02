@@ -43,4 +43,4 @@ CREATE TABLE public.transaction
       ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-INSERT INTO public.block(version, previousBlockHash) VALUES (1, 'NULL');
+INSERT INTO public.block(version, previousBlockHash) VALUES (0, 'NULL');

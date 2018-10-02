@@ -9,4 +9,6 @@ public interface BlockService {
 
 	Block save(Block block);
 
+	void updateBlockchain(Block latestBlock) throws BlockChainException;
+
 }

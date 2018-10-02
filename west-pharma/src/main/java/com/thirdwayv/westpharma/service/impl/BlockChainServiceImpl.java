@@ -17,7 +17,7 @@ import com.thirdwayv.westpharma.service.api.BlockChainService;
 import com.thirdwayv.westpharma.service.api.BlockService;
 import com.thirdwayv.westpharma.service.api.TransactionService;
 import com.thirdwayv.westpharma.util.SystemConfig;
-import com.thirdwayv.westpharma.util.Utils;
+import com.thirdwayv.westpharma.util.HashingUtils;
 
 @Service
 public class BlockChainServiceImpl implements BlockChainService {
@@ -43,11 +43,10 @@ public class BlockChainServiceImpl implements BlockChainService {
 		latestBlock = blockService.save(latestBlock);
 
 		transactionDTO.setBlockId(latestBlock.getId());
+		transactionDTO.setHash(txEntity.getSignature());
 
 		if (isBlockClosed(latestBlock)) {
-//			formBlock();
-//			openNewBlock();
-//			updateBlockchain();
+			blockService.updateBlockchain(latestBlock);
 		}
 		return transactionDTO;
 	}
@@ -61,14 +60,21 @@ public class BlockChainServiceImpl implements BlockChainService {
 		tx.setBlock(block);
 		tx.setWriterId(transactionDTO.getWriterId());
 		tx.setTagId(transactionDTO.getTagId());
-		tx.setCreationTime(new Timestamp(transactionDTO.getTime()));
-		tx.setLength(transactionDTO.getTransactionJson().length());
+		tx.setCreationTime(transactionDTO.getTime() != null ? new Timestamp(transactionDTO.getTime()) : null);
+		tx.setLength(transactionDTO.getTransactionJson() != null ? transactionDTO.getTransactionJson().length() : null);
 		try {
-			tx.setTransaction(new PGobject());
-			tx.getTransaction().setValue(transactionDTO.getTransactionJson());
-			tx.setHash(Utils.getHashBySHA256(transactionDTO.getTransactionJson()));
-			tx.setSignature(Utils.getHashBySHA256(tx.getWriterId(), tx.getTagId(),
-					String.valueOf(tx.getCreationTime().getTime()), String.valueOf(tx.getLength()), tx.getHash()));
+			if (transactionDTO.getHash() == null) {
+				tx.setTransaction(new PGobject());
+				tx.getTransaction().setValue(transactionDTO.getTransactionJson());
+
+				tx.setHash(HashingUtils.getHashBySHA256(transactionDTO.getTransactionJson()));
+				tx.setSignature(HashingUtils.getHashBySHA256(tx.getWriterId(), tx.getTagId(),
+						tx.getCreationTime().getTime(), tx.getLength(), tx.getHash()));
+			} else {
+				tx.setHash(transactionDTO.getHash());
+				tx.setSignature(HashingUtils.getHashBySHA256(tx.getHash()));
+			}
+
 		} catch (SQLException e) {
 			throw new BlockChainException("Can't convert transaction json to PGObject", e);
 		} catch (NoSuchAlgorithmException e) {
