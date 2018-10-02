@@ -19,7 +19,7 @@ public class TransactionController {
 
 	@PostMapping("/save")
 	public TransactionDTO saveTransaction(@RequestBody TransactionDTO tx) throws BlockChainException {
-		blockChainService.saveTransaction(tx);
+		tx = blockChainService.saveTransaction(tx);
 		return tx;
 	}
 }
