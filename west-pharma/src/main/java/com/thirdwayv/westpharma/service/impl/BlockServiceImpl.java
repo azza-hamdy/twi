@@ -4,7 +4,6 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +23,11 @@ public class BlockServiceImpl implements BlockService {
 	private static final int SEQUANCIAL_BLOCK_VERSION = 0;
 
 	@Autowired
-	private BlockRepo blockRepo;
+	private BlockRepo repo;
 
 	@Override
 	public Block getLatestBlock() throws BlockChainException {
-		Block block = blockRepo.findBySignatureIsNull();
+		Block block = repo.findBySignatureIsNull();
 		if (block == null) {
 			throw new BlockChainException("Block Must not be Null");
 		}
@@ -37,7 +36,7 @@ public class BlockServiceImpl implements BlockService {
 
 	@Override
 	public Block save(Block block) {
-		return blockRepo.save(block);
+		return repo.save(block);
 	}
 
 	@Override
@@ -65,7 +64,7 @@ public class BlockServiceImpl implements BlockService {
 		}
 
 		try {
-			latestBlock.setTopHash(HashingUtils.getHashBySHA256(sb.toString()));
+			latestBlock.setTopHash(HashingUtils.generateHashBySHA256(sb.toString()));
 		} catch (NoSuchAlgorithmException e) {
 			throw new BlockChainException("Can't Generate Block Top Hash", e);
 		}
@@ -74,9 +73,10 @@ public class BlockServiceImpl implements BlockService {
 
 	private void calcSignature(Block latestBlock) throws BlockChainException {
 		try {
-			HashingUtils.getHashBySHA256(latestBlock.getVersion(), latestBlock.getId(),
+			String signature = HashingUtils.generateHashBySHA256(latestBlock.getVersion(), latestBlock.getBlockNumber(),
 					latestBlock.getPreviousBlockHash(), latestBlock.getTopHash(), latestBlock.getCreationTime(),
 					latestBlock.getTransactionsNumber());
+			latestBlock.setSignature(signature);
 		} catch (NoSuchAlgorithmException e) {
 			throw new BlockChainException("Can't Generate Block Signature Hash", e);
 		}
@@ -87,6 +87,8 @@ public class BlockServiceImpl implements BlockService {
 		Block block = new Block();
 
 		block.setVersion(SEQUANCIAL_BLOCK_VERSION);
+		block.setBlockNumber(repo.count());
+		block.setTransactionsNumber(0);
 		block.setPreviousBlockHash(latestBlock.getSignature());
 
 		return block;

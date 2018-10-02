@@ -3,6 +3,7 @@ package com.thirdwayv.westpharma.model;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -12,8 +13,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-
-import org.postgresql.util.PGobject;
 
 @Entity
 @Table
@@ -28,8 +27,10 @@ public class Transaction implements Serializable {
 
 	private Integer version;
 
+	@Column(name = "writerid")
 	private String writerId;
 
+	@Column(name = "tagid")
 	private String tagId;
 
 	private Integer length;
@@ -40,12 +41,13 @@ public class Transaction implements Serializable {
 
 	private Integer index;
 
+	@Column(name = "creationtime")
 	private Timestamp creationTime;
 
-	private PGobject transaction;
+	private String transaction;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id", nullable = false)
+	@JoinColumn(name = "blocknumber", referencedColumnName = "blocknumber", nullable = false)
 	private Block block;
 
 	public Long getId() {
@@ -120,11 +122,11 @@ public class Transaction implements Serializable {
 		this.creationTime = creationTime;
 	}
 
-	public PGobject getTransaction() {
+	public String getTransaction() {
 		return transaction;
 	}
 
-	public void setTransaction(PGobject transaction) {
+	public void setTransaction(String transaction) {
 		this.transaction = transaction;
 	}
 

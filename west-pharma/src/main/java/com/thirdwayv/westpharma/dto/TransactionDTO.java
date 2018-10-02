@@ -2,19 +2,19 @@ package com.thirdwayv.westpharma.dto;
 
 public class TransactionDTO {
 
-	private Long blockId;
+	private Long blockNumber;
 	private String writerId;
 	private String tagId;
 	private Long time;
 	private String hash;
 	private String transactionJson;
 
-	public Long getBlockId() {
-		return blockId;
+	public Long getBlockNumber() {
+		return blockNumber;
 	}
 
-	public void setBlockId(Long blockId) {
-		this.blockId = blockId;
+	public void setBlockNumber(Long blockId) {
+		this.blockNumber = blockId;
 	}
 
 	public String getWriterId() {

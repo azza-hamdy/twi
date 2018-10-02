@@ -5,7 +5,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class HashingUtils {
-	public static String getHashBySHA256(Object... params) throws NoSuchAlgorithmException {
+	public static String generateHashBySHA256(Object... params) throws NoSuchAlgorithmException {
 		StringBuilder sb = new StringBuilder();
 		for (Object s : params) {
 			sb.append(String.valueOf(s));
