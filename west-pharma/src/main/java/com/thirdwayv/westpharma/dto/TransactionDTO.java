@@ -13,8 +13,8 @@ public class TransactionDTO {
 		return blockNumber;
 	}
 
-	public void setBlockNumber(Long blockId) {
-		this.blockNumber = blockId;
+	public void setBlockNumber(Long blockNumber) {
+		this.blockNumber = blockNumber;
 	}
 
 	public String getWriterId() {

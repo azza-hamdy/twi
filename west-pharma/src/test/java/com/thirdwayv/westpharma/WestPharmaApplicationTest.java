@@ -4,7 +4,9 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.nio.charset.Charset;
 import java.util.Date;
+import java.util.Random;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -92,10 +94,24 @@ public class WestPharmaApplicationTest {
 
 	private TransactionDTO createTransactionDTO() {
 		TransactionDTO tx = new TransactionDTO();
-		tx.setTagId("12665");
-		tx.setWriterId("localhost");
+		tx.setTagId(String.valueOf(new Random().nextInt(100000)));
+		byte[] strBytes = new byte[20];
+		new Random().nextBytes(strBytes);
+		tx.setWriterId(generateRandomStringWithLength(20));
 		tx.setTime(new Date().getTime());
-		tx.setTransactionJson("{\"tagId\":\"1256\", \"WrtiterId\":\"localhost\"}");
+		tx.setTransactionJson("{\"tagId\":\"" + tx.getTagId() + "\", \"WrtiterId\":\"" + tx.getWriterId() + "\"}");
 		return tx;
+	}
+
+	private String generateRandomStringWithLength(int length) {
+		int leftLimit = 97; // letter 'a'
+		int rightLimit = 122; // letter 'z'
+		Random random = new Random();
+		StringBuilder buffer = new StringBuilder(length);
+		for (int i = 0; i < length; i++) {
+			int randomLimitedInt = leftLimit + (int) (random.nextFloat() * (rightLimit - leftLimit + 1));
+			buffer.append((char) randomLimitedInt);
+		}
+		return buffer.toString();
 	}
 }

@@ -1,13 +1,16 @@
 package com.thirdwayv.westpharma.service.api;
 
+import java.util.List;
+
 import com.thirdwayv.westpharma.dto.TransactionDTO;
-import com.thirdwayv.westpharma.exception.InvalidInputException;
-import com.thirdwayv.westpharma.model.Transaction;
+import com.thirdwayv.westpharma.exception.TransactionIsNotExistException;
 
 public interface TransactionService {
 
-	Transaction save(Transaction tx);
+	List<TransactionDTO> getTransactionByHash(String hash) throws TransactionIsNotExistException;
 
-	void validate(TransactionDTO txDTO) throws InvalidInputException;
+	List<TransactionDTO> getTransactionByTagId(String tagId) throws TransactionIsNotExistException;
+
+	List<TransactionDTO> getTransactionByWriterId(String writerId) throws TransactionIsNotExistException;
 
 }

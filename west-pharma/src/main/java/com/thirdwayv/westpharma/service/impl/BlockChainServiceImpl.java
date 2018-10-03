@@ -24,7 +24,7 @@ public class BlockChainServiceImpl implements BlockChainService {
 	private BlockService blockService;
 
 	@Autowired
-	private TransactionService txService;
+	private TransactionService treansactionService;
 
 	@Autowired
 	private SystemConfig sysConfig;
@@ -32,7 +32,7 @@ public class BlockChainServiceImpl implements BlockChainService {
 	// TODO: blocking issue
 	@Transactional
 	public TransactionDTO saveTransaction(TransactionDTO transactionDTO) throws Exception {
-		txService.validate(transactionDTO);
+		getTransactionService().validate(transactionDTO);
 
 		synchronized (this) {
 			Block latestBlock = blockService.getLatestBlock();
@@ -53,7 +53,7 @@ public class BlockChainServiceImpl implements BlockChainService {
 
 	private void saveTransaction(TransactionDTO transactionDTO, Block latestBlock) throws BlockChainException {
 		Transaction txEntity = buildTransactionEntity(transactionDTO, latestBlock);
-		txEntity = txService.save(txEntity);
+		txEntity = getTransactionService().save(txEntity);
 		transactionDTO.setHash(txEntity.getSignature());
 		transactionDTO.setBlockNumber(latestBlock.getBlockNumber());
 	}
@@ -88,5 +88,9 @@ public class BlockChainServiceImpl implements BlockChainService {
 		}
 
 		return tx;
+	}
+
+	private TransactionServiceImpl getTransactionService() {
+		return (TransactionServiceImpl) treansactionService;
 	}
 }

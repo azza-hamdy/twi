@@ -1,4 +1,4 @@
-package com.thirdwayv.westpharma.controller.exceptionhandler;
+package com.thirdwayv.westpharma.exception;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7,9 +7,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
-
-import com.thirdwayv.westpharma.exception.BlockChainException;
-import com.thirdwayv.westpharma.exception.InvalidInputException;
 
 @ControllerAdvice
 public class BlockchainExceptionAdvice {
@@ -30,6 +27,22 @@ public class BlockchainExceptionAdvice {
 	public String handleInvalidInputException(InvalidInputException ex) {
 		logger.info(ex.getMessage(), ex.getCause());
 		return ex.getMessage();
+	}
+
+	@ResponseBody
+	@ExceptionHandler(TransactionIsNotExistException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public String handleTransactionIsNotExistException(TransactionIsNotExistException ex) {
+		logger.info(ex.getMessage(), ex.getCause());
+		return ex.getMessage();
+	}
+
+	@ResponseBody
+	@ExceptionHandler(Exception.class)
+	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+	public String handleUnhandledException(Exception ex) {
+		logger.info(ex.getMessage(), ex.getCause());
+		return "Internal Server Error";
 	}
 
 }

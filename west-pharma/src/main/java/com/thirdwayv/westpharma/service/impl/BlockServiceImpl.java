@@ -19,7 +19,7 @@ import com.thirdwayv.westpharma.util.HashingUtils;
 @Service
 public class BlockServiceImpl implements BlockService {
 
-	private static final int MERKAL_TREE_BLOCK_VERSION = 1;
+//	private static final int MERKAL_TREE_BLOCK_VERSION = 1;
 	private static final int SEQUANCIAL_BLOCK_VERSION = 0;
 
 	@Autowired
