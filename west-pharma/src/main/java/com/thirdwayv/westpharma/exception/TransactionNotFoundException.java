@@ -1,10 +1,10 @@
 package com.thirdwayv.westpharma.exception;
 
-public class TransactionIsNotExistException extends Exception {
+public class TransactionNotFoundException extends Exception {
 
 	private static final long serialVersionUID = 1L;
 
-	public TransactionIsNotExistException(String msg) {
+	public TransactionNotFoundException(String msg) {
 		super(msg);
 	}
 

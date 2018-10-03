@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import com.thirdwayv.westpharma.converter.TransactionConverter;
 import com.thirdwayv.westpharma.dto.TransactionDTO;
 import com.thirdwayv.westpharma.exception.InvalidInputException;
-import com.thirdwayv.westpharma.exception.TransactionIsNotExistException;
+import com.thirdwayv.westpharma.exception.TransactionNotFoundException;
 import com.thirdwayv.westpharma.model.Transaction;
 import com.thirdwayv.westpharma.repo.TransactionRepo;
 import com.thirdwayv.westpharma.service.api.TransactionService;
@@ -40,29 +40,29 @@ public class TransactionServiceImpl implements TransactionService {
 	}
 
 	@Override
-	public List<TransactionDTO> getTransactionByHash(String hash) throws TransactionIsNotExistException {
+	public List<TransactionDTO> getTransactionByHash(String hash) throws TransactionNotFoundException {
 		List<Transaction> transactions = repo.findByHash(hash);
 		if (transactions == null || transactions.isEmpty()) {
-			throw new TransactionIsNotExistException("There is no transactions with this hash: " + hash);
+			throw new TransactionNotFoundException("There is no transactions with this hash: " + hash);
 		}
 		return convertTransactionsToDTOs(transactions);
 	}
 
 	@Override
-	public List<TransactionDTO> getTransactionByTagId(String tagId) throws TransactionIsNotExistException {
+	public List<TransactionDTO> getTransactionByTagId(String tagId) throws TransactionNotFoundException {
 		List<Transaction> transactions = repo.findByTagId(tagId);
 		if (transactions == null || transactions.isEmpty()) {
-			throw new TransactionIsNotExistException("There is no transactions with this tag ID: " + tagId);
+			throw new TransactionNotFoundException("There is no transactions with this tag ID: " + tagId);
 		}
 
 		return convertTransactionsToDTOs(transactions);
 	}
 
 	@Override
-	public List<TransactionDTO> getTransactionByWriterId(String writerId) throws TransactionIsNotExistException {
+	public List<TransactionDTO> getTransactionByWriterId(String writerId) throws TransactionNotFoundException {
 		List<Transaction> transactions = repo.findByWriterId(writerId);
 		if (transactions == null || transactions.isEmpty()) {
-			throw new TransactionIsNotExistException("There is no transactions with this writer ID: " + writerId);
+			throw new TransactionNotFoundException("There is no transactions with this writer ID: " + writerId);
 		}
 
 		return convertTransactionsToDTOs(transactions);

@@ -5,11 +5,15 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.thirdwayv.westpharma.converter.BlockConverter;
+import com.thirdwayv.westpharma.dto.BlockHeaderDTO;
 import com.thirdwayv.westpharma.exception.BlockChainException;
+import com.thirdwayv.westpharma.exception.BlockNotFoundException;
 import com.thirdwayv.westpharma.model.Block;
 import com.thirdwayv.westpharma.model.Transaction;
 import com.thirdwayv.westpharma.repo.BlockRepo;
@@ -24,6 +28,9 @@ public class BlockServiceImpl implements BlockService {
 
 	@Autowired
 	private BlockRepo repo;
+
+	@Autowired
+	private BlockConverter converter;
 
 	@Override
 	public Block getLatestBlock() throws BlockChainException {
@@ -46,6 +53,16 @@ public class BlockServiceImpl implements BlockService {
 
 		Block newBlock = initNewBlock(latestBlock);
 		save(newBlock);
+	}
+
+	@Override
+	public BlockHeaderDTO getBlockHeaderByBlockNumber(Long blockNumber) throws BlockNotFoundException {
+		Optional<Block> optionalBlock = repo.findByBlockNumber(blockNumber);
+		if (!optionalBlock.isPresent()) {
+			throw new BlockNotFoundException("There is no Block with this number: " + blockNumber);
+		}
+
+		return converter.toBlockHeaderDTO(optionalBlock.get());
 	}
 
 	private void formLatestBlock(Block latestBlock) throws BlockChainException {

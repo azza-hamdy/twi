@@ -30,9 +30,17 @@ public class BlockchainExceptionAdvice {
 	}
 
 	@ResponseBody
-	@ExceptionHandler(TransactionIsNotExistException.class)
+	@ExceptionHandler(TransactionNotFoundException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	public String handleTransactionIsNotExistException(TransactionIsNotExistException ex) {
+	public String handleTransactionNotFoundException(TransactionNotFoundException ex) {
+		logger.info(ex.getMessage(), ex.getCause());
+		return ex.getMessage();
+	}
+
+	@ResponseBody
+	@ExceptionHandler(BlockNotFoundException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public String handleBlockNotFoundException(BlockNotFoundException ex) {
 		logger.info(ex.getMessage(), ex.getCause());
 		return ex.getMessage();
 	}
