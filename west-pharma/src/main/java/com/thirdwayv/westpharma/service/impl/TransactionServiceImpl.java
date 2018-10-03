@@ -1,7 +1,10 @@
 package com.thirdwayv.westpharma.service.impl;
 
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,6 +72,10 @@ public class TransactionServiceImpl implements TransactionService {
 	public List<TransactionDTO> getTransactionWithinSpecificPeriod(String from, String to) {
 		Timestamp startDate = new Timestamp(Long.parseLong(from));
 		Timestamp endDate = new Timestamp(Long.parseLong(to));
+
+		System.out.println("Start: " + startDate);
+		System.out.println("End: " + endDate);
+
 		return convertTransactionsToDTOs(repo.findByCreationTimeBetween(startDate, endDate));
 	}
 

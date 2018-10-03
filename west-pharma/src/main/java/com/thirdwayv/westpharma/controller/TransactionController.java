@@ -44,8 +44,10 @@ public class TransactionController {
 	public List<TransactionDTO> getTransactionByWriterd(@RequestParam("writer") String writerId) throws Exception {
 		return transactionService.getTransactionByWriterId(writerId);
 	}
-	
-	public List<TransactionDTO> getTransactionByCreationTimeBetween(@RequestParam("from") String from,@RequestParam("to") String to){
+
+	@GetMapping("/readwithintime")
+	public List<TransactionDTO> getTransactionByCreationTimeBetween(@RequestParam("from") String from,
+			@RequestParam("to") String to) {
 		return transactionService.getTransactionWithinSpecificPeriod(from, to);
 	}
 }
