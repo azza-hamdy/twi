@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.thirdwayv.westpharma.dto.TransactionDTO;
-import com.thirdwayv.westpharma.exception.BlockChainException;
 import com.thirdwayv.westpharma.service.api.BlockChainService;
 
 @RestController
@@ -18,7 +17,7 @@ public class TransactionController {
 	private BlockChainService blockChainService;
 
 	@PostMapping("/save")
-	public TransactionDTO saveTransaction(@RequestBody TransactionDTO tx) throws BlockChainException {
+	public TransactionDTO saveTransaction(@RequestBody TransactionDTO tx) throws Exception {
 		tx = blockChainService.saveTransaction(tx);
 		return tx;
 	}

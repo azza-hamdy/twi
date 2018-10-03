@@ -31,11 +31,15 @@ public class BlockChainServiceImpl implements BlockChainService {
 
 	// TODO: blocking issue
 	@Transactional
-	public synchronized TransactionDTO saveTransaction(TransactionDTO transactionDTO) throws BlockChainException {
-		Block latestBlock = blockService.getLatestBlock();
-		saveTransaction(transactionDTO, latestBlock);
-		updateBlock(transactionDTO, latestBlock);
-		return transactionDTO;
+	public TransactionDTO saveTransaction(TransactionDTO transactionDTO) throws Exception {
+		txService.validate(transactionDTO);
+
+		synchronized (this) {
+			Block latestBlock = blockService.getLatestBlock();
+			saveTransaction(transactionDTO, latestBlock);
+			updateBlock(transactionDTO, latestBlock);
+			return transactionDTO;
+		}
 	}
 
 	private void updateBlock(TransactionDTO transactionDTO, Block latestBlock) throws BlockChainException {
@@ -63,10 +67,11 @@ public class BlockChainServiceImpl implements BlockChainService {
 		tx.setBlock(block);
 		tx.setIndex(block.getTransactionsNumber() + 1);
 		try {
+			tx.setCreationTime(transactionDTO.getTime() != null ? new Timestamp(transactionDTO.getTime()) : null);
+
 			if (transactionDTO.getHash() == null) {
 				tx.setWriterId(transactionDTO.getWriterId());
 				tx.setTagId(transactionDTO.getTagId());
-				tx.setCreationTime(transactionDTO.getTime() != null ? new Timestamp(transactionDTO.getTime()) : null);
 				tx.setLength(transactionDTO.getTransactionJson() != null ? transactionDTO.getTransactionJson().length()
 						: null);
 				tx.setTransaction(transactionDTO.getTransactionJson());

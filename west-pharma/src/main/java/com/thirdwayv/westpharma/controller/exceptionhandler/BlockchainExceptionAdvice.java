@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.thirdwayv.westpharma.exception.BlockChainException;
+import com.thirdwayv.westpharma.exception.InvalidInputException;
 
 @ControllerAdvice
 public class BlockchainExceptionAdvice {
@@ -17,8 +18,16 @@ public class BlockchainExceptionAdvice {
 
 	@ResponseBody
 	@ExceptionHandler(BlockChainException.class)
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	public String handleBlockchainException(BlockChainException ex) {
+		logger.info(ex.getMessage(), ex.getCause());
+		return ex.getMessage();
+	}
+
+	@ResponseBody
+	@ExceptionHandler(InvalidInputException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public String handleInvalidInputException(InvalidInputException ex) {
 		logger.info(ex.getMessage(), ex.getCause());
 		return ex.getMessage();
 	}
