@@ -1,11 +1,9 @@
 package com.thirdwayv.westpharma.service.impl;
 
 import java.sql.Timestamp;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -77,6 +75,17 @@ public class TransactionServiceImpl implements TransactionService {
 		System.out.println("End: " + endDate);
 
 		return convertTransactionsToDTOs(repo.findByCreationTimeBetween(startDate, endDate));
+	}
+
+	@Override
+	public TransactionDTO getTransactionDetails(Long blockNumber, Integer transactionIndex)
+			throws TransactionNotFoundException {
+		Optional<Transaction> optionalTx = repo.findByBlockBlockNumberAndIndex(blockNumber, transactionIndex);
+		if (!optionalTx.isPresent()) {
+			throw new TransactionNotFoundException(
+					"There is no transactions in the block number: " + blockNumber + " at index: " + transactionIndex);
+		}
+		return converter.toDTO(optionalTx.get());
 	}
 
 	private List<TransactionDTO> convertTransactionsToDTOs(List<Transaction> transactions) {

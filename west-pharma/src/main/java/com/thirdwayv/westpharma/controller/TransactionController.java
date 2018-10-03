@@ -50,4 +50,11 @@ public class TransactionController {
 			@RequestParam("to") String to) {
 		return transactionService.getTransactionWithinSpecificPeriod(from, to);
 	}
+
+	@GetMapping("/readtransaction")
+	public TransactionDTO getTransactionDetails(@RequestParam("blocknumber") Long blockNumber,
+			@RequestParam("transactionindex") Integer transactionIndex) throws Exception {
+		return transactionService.getTransactionDetails(blockNumber, transactionIndex);
+
+	}
 }
