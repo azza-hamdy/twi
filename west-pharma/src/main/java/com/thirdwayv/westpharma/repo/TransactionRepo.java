@@ -1,5 +1,6 @@
 package com.thirdwayv.westpharma.repo;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,5 +16,7 @@ public interface TransactionRepo extends JpaRepository<Transaction, Long> {
 	List<Transaction> findByTagId(String tagId);
 
 	List<Transaction> findByWriterId(String writerId);
+	
+	List<Transaction> findByCreationTimeBetween(Timestamp from,Timestamp to);
 
 }

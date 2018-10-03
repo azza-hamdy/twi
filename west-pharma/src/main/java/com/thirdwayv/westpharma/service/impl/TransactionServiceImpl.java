@@ -1,5 +1,6 @@
 package com.thirdwayv.westpharma.service.impl;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,6 +63,13 @@ public class TransactionServiceImpl implements TransactionService {
 		}
 
 		return convertTransactionsToDTOs(transactions);
+	}
+
+	@Override
+	public List<TransactionDTO> getTransactionWithinSpecificPeriod(String from, String to) {
+		Timestamp startDate = new Timestamp(Long.parseLong(from));
+		Timestamp endDate = new Timestamp(Long.parseLong(to));
+		return convertTransactionsToDTOs(repo.findByCreationTimeBetween(startDate, endDate));
 	}
 
 	private List<TransactionDTO> convertTransactionsToDTOs(List<Transaction> transactions) {

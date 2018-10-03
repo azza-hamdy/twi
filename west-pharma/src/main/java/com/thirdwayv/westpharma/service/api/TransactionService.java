@@ -12,5 +12,6 @@ public interface TransactionService {
 	List<TransactionDTO> getTransactionByTagId(String tagId) throws TransactionIsNotExistException;
 
 	List<TransactionDTO> getTransactionByWriterId(String writerId) throws TransactionIsNotExistException;
-
+	
+	List<TransactionDTO> getTransactionWithinSpecificPeriod(String from,String to);
 }
