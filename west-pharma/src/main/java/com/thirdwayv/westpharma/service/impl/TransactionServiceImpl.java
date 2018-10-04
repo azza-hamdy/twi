@@ -68,13 +68,9 @@ public class TransactionServiceImpl implements TransactionService {
 	}
 
 	@Override
-	public List<TransactionDTO> getTransactionWithinSpecificPeriod(String from, String to) {
-		Timestamp startDate = new Timestamp(Long.parseLong(from));
-		Timestamp endDate = new Timestamp(Long.parseLong(to));
-
-		System.out.println("Start: " + startDate);
-		System.out.println("End: " + endDate);
-
+	public List<TransactionDTO> getTransactionWithinSpecificPeriod(Long from, Long to) {
+		Timestamp startDate = new Timestamp(from);
+		Timestamp endDate = new Timestamp(to);
 		return convertTransactionsToDTOs(repo.findByCreationTimeBetween(startDate, endDate));
 	}
 
