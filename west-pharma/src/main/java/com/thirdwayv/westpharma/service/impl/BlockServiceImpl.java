@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.thirdwayv.westpharma.converter.BlockConverter;
@@ -44,6 +45,14 @@ public class BlockServiceImpl implements BlockService {
 	@Override
 	public Block save(Block block) {
 		return repo.save(block);
+	}
+
+	@Scheduled(cron = "0 0 0 * * *")
+	public void updateBlockchainPeriodicly() throws BlockChainException {
+		Block latestBlock = getLatestBlock();
+		if (latestBlock.getTransactionsNumber() != 0) {
+			updateBlockchain(latestBlock);
+		}
 	}
 
 	@Override
