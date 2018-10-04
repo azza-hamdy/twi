@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.thirdwayv.westpharma.converter.TransactionConverter;
 import com.thirdwayv.westpharma.dto.TransactionDTO;
+import com.thirdwayv.westpharma.exception.BlockNotFoundException;
 import com.thirdwayv.westpharma.exception.InvalidInputException;
 import com.thirdwayv.westpharma.exception.TransactionNotFoundException;
 import com.thirdwayv.westpharma.model.Transaction;
@@ -86,6 +87,15 @@ public class TransactionServiceImpl implements TransactionService {
 					"There is no transactions in the block number: " + blockNumber + " at index: " + transactionIndex);
 		}
 		return converter.toDTO(optionalTx.get());
+	}
+
+	@Override
+	public List<TransactionDTO> getBlockTransactionSignatures(Long blockNumber) throws BlockNotFoundException {
+		List<Transaction> transactions = repo.findByBlockBlockNumber(blockNumber);
+		if (transactions == null || transactions.isEmpty()) {
+			throw new BlockNotFoundException("There is no Block with this number: " + blockNumber);
+		}
+		return convertTransactionsToDTOs(transactions);
 	}
 
 	private List<TransactionDTO> convertTransactionsToDTOs(List<Transaction> transactions) {

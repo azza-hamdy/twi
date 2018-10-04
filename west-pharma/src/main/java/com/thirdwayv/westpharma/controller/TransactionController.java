@@ -57,4 +57,10 @@ public class TransactionController {
 		return transactionService.getTransactionDetails(blockNumber, transactionIndex);
 
 	}
+	
+	@GetMapping("/readhashes")
+	public List<TransactionDTO> readBlockHashes(@RequestParam("blocknumber") Long blockNumber) throws Exception {
+		return transactionService.getBlockTransactionSignatures(blockNumber);
+	}
+
 }

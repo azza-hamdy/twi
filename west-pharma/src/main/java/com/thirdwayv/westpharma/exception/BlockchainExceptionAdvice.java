@@ -3,10 +3,12 @@ package com.thirdwayv.westpharma.exception;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 @ControllerAdvice
 public class BlockchainExceptionAdvice {
@@ -43,6 +45,22 @@ public class BlockchainExceptionAdvice {
 	public String handleBlockNotFoundException(BlockNotFoundException ex) {
 		logger.info(ex.getMessage(), ex.getCause());
 		return ex.getMessage();
+	}
+
+	@ResponseBody
+	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
+	@ResponseStatus(HttpStatus.NOT_FOUND)
+	public String handleRestParamsIncorrectType(MethodArgumentTypeMismatchException ex) {
+		logger.info(ex.getMessage(), ex.getCause());
+		return "NOT FOUND";
+	}
+
+	@ResponseBody
+	@ExceptionHandler(MissingServletRequestParameterException.class)
+	@ResponseStatus(HttpStatus.NOT_FOUND)
+	public String handleRestMissingParams(MissingServletRequestParameterException ex) {
+		logger.info(ex.getMessage(), ex.getCause());
+		return "NOT FOUND";
 	}
 
 	@ResponseBody

@@ -3,6 +3,7 @@ package com.thirdwayv.westpharma.service.api;
 import java.util.List;
 
 import com.thirdwayv.westpharma.dto.TransactionDTO;
+import com.thirdwayv.westpharma.exception.BlockNotFoundException;
 import com.thirdwayv.westpharma.exception.TransactionNotFoundException;
 
 public interface TransactionService {
@@ -15,5 +16,8 @@ public interface TransactionService {
 
 	List<TransactionDTO> getTransactionWithinSpecificPeriod(String from, String to);
 
-	TransactionDTO getTransactionDetails(Long blockNumber, Integer transactionIndex) throws TransactionNotFoundException;
+	TransactionDTO getTransactionDetails(Long blockNumber, Integer transactionIndex)
+			throws TransactionNotFoundException;
+
+	List<TransactionDTO> getBlockTransactionSignatures(Long blockNumber) throws BlockNotFoundException;
 }
