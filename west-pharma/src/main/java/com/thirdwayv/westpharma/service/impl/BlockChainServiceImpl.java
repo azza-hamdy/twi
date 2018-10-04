@@ -3,6 +3,8 @@ package com.thirdwayv.westpharma.service.impl;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,11 +16,14 @@ import com.thirdwayv.westpharma.model.Transaction;
 import com.thirdwayv.westpharma.service.api.BlockChainService;
 import com.thirdwayv.westpharma.service.api.BlockService;
 import com.thirdwayv.westpharma.service.api.TransactionService;
+import com.thirdwayv.westpharma.util.BlockConcurrancyManager;
 import com.thirdwayv.westpharma.util.HashingUtils;
 import com.thirdwayv.westpharma.util.SystemConfig;
 
 @Service
 public class BlockChainServiceImpl implements BlockChainService {
+
+	private static final Logger logger = LoggerFactory.getLogger(BlockChainServiceImpl.class);
 
 	@Autowired
 	private BlockService blockService;
@@ -33,16 +38,24 @@ public class BlockChainServiceImpl implements BlockChainService {
 	@Transactional
 	public TransactionDTO saveTransaction(TransactionDTO transactionDTO) throws Exception {
 		getTransactionService().validate(transactionDTO);
-
-		synchronized (this) {
-			Block latestBlock = blockService.getLatestBlock();
-			saveTransaction(transactionDTO, latestBlock);
-			updateBlock(transactionDTO, latestBlock);
-			return transactionDTO;
+		while (true) {
+			logger.debug("trying acquiring service lock...");
+			if (BlockConcurrancyManager.lock()) {
+				logger.debug("Acquireing service lock successfully");
+				Block latestBlock = blockService.getLatestBlock();
+				saveTransaction(transactionDTO, latestBlock);
+				updateBlock(latestBlock);
+				BlockConcurrancyManager.unlock();
+				logger.debug("Releasing service lock successfully");
+				break;
+			} else {
+				logger.debug("Can't acquire service lock");
+			}
 		}
+		return transactionDTO;
 	}
 
-	private void updateBlock(TransactionDTO transactionDTO, Block latestBlock) throws BlockChainException {
+	private void updateBlock(Block latestBlock) throws BlockChainException {
 		latestBlock.setTransactionsNumber(latestBlock.getTransactionsNumber() + 1);
 		latestBlock = blockService.save(latestBlock);
 

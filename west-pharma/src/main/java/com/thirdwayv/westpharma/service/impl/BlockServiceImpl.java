@@ -7,6 +7,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -19,10 +21,13 @@ import com.thirdwayv.westpharma.model.Block;
 import com.thirdwayv.westpharma.model.Transaction;
 import com.thirdwayv.westpharma.repo.BlockRepo;
 import com.thirdwayv.westpharma.service.api.BlockService;
+import com.thirdwayv.westpharma.util.BlockConcurrancyManager;
 import com.thirdwayv.westpharma.util.HashingUtils;
 
 @Service
 public class BlockServiceImpl implements BlockService {
+
+	private static final Logger logger = LoggerFactory.getLogger(BlockServiceImpl.class);
 
 //	private static final int MERKAL_TREE_BLOCK_VERSION = 1;
 	private static final int SEQUANCIAL_BLOCK_VERSION = 0;
@@ -48,11 +53,27 @@ public class BlockServiceImpl implements BlockService {
 	}
 
 	@Scheduled(cron = "0 0 0 * * *")
-	public void updateBlockchainPeriodicly() throws BlockChainException {
-		Block latestBlock = getLatestBlock();
-		if (latestBlock.getTransactionsNumber() != 0) {
-			updateBlockchain(latestBlock);
+	public void updateBlockchainPeriodically() throws BlockChainException {
+		logger.debug("try to form the latest block at: " + new Date().toString());
+		while (true) {
+			logger.debug("trying acquiring service lock...");
+			if (BlockConcurrancyManager.lock()) {
+				logger.debug("Acquireing service lock successfully");
+				Block latestBlock = getLatestBlock();
+				if (latestBlock.getTransactionsNumber() != 0) {
+					updateBlockchain(latestBlock);
+					logger.debug("successfully, form block#" + latestBlock.getBlockNumber());
+				} else {
+					logger.debug("Can't form the block#" + latestBlock.getBlockNumber() + " as it is empty");
+				}
+				BlockConcurrancyManager.unlock();
+				logger.debug("Releasing service lock successfully");
+				break;
+			} else {
+				logger.debug("Can't acquire service lock");
+			}
 		}
+		BlockConcurrancyManager.unlock();
 	}
 
 	@Override

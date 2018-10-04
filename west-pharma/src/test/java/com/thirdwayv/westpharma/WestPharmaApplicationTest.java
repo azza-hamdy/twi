@@ -25,6 +25,8 @@ import com.thirdwayv.westpharma.util.SystemConfig;
 @SpringBootTest
 public class WestPharmaApplicationTest {
 
+	private static final int SHA256_HASH_LENGTH = 64;
+
 	@Autowired
 	private BlockChainService blockChainService;
 
@@ -47,7 +49,7 @@ public class WestPharmaApplicationTest {
 	@Test
 	public void testSaveTxWithHash() throws Exception {
 		TransactionDTO tx = new TransactionDTO();
-		tx.setHash("b840aed2765c3da77822897b649a177dda0c1e31c5f8fd0b667233d0cad2699e");
+		tx.setHash(generateRandomStringWithLength(SHA256_HASH_LENGTH));
 		tx.setTime(new Date().getTime());
 		TransactionDTO savedTransaction = blockChainService.saveTransaction(tx);
 		assertNotNull(savedTransaction.getBlockNumber());
@@ -64,17 +66,6 @@ public class WestPharmaApplicationTest {
 	}
 
 	@Test
-	public void testIncreamentBlockSizeAfterSavingTxTest() throws Exception {
-		Block latestBlock = blockService.getLatestBlock();
-		Integer oldBlockSize = latestBlock.getTransactionsNumber();
-
-		blockChainService.saveTransaction(createTransactionDTO());
-		Block updatedBlock = blockRepo.findById(latestBlock.getId()).get();
-
-		assertTrue(oldBlockSize + 1 == updatedBlock.getTransactionsNumber());
-	}
-
-	@Test
 	public void testBlockFormationAfterCertainTransactionNumber() throws Exception {
 		Block latestBlock = blockService.getLatestBlock();
 		Integer blockSize = latestBlock.getTransactionsNumber();
@@ -86,6 +77,17 @@ public class WestPharmaApplicationTest {
 		}
 
 		assertNotNull(latestBlock.getSignature());
+	}
+
+	@Test
+	public void testIncreamentBlockSizeAfterSavingTxTest() throws Exception {
+		Block latestBlock = blockService.getLatestBlock();
+		Integer oldBlockSize = latestBlock.getTransactionsNumber();
+
+		blockChainService.saveTransaction(createTransactionDTO());
+		Block updatedBlock = blockRepo.findById(latestBlock.getId()).get();
+
+		assertTrue(oldBlockSize + 1 == updatedBlock.getTransactionsNumber());
 	}
 
 	/********************************************************************************/
