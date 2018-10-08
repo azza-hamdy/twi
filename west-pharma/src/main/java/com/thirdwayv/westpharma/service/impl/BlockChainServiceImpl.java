@@ -1,14 +1,12 @@
 package com.thirdwayv.westpharma.service.impl;
 
-import java.security.NoSuchAlgorithmException;
-import java.sql.Timestamp;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.thirdwayv.westpharma.converter.TransactionConverter;
 import com.thirdwayv.westpharma.dto.TransactionDTO;
 import com.thirdwayv.westpharma.exception.BlockChainException;
 import com.thirdwayv.westpharma.model.Block;
@@ -17,7 +15,6 @@ import com.thirdwayv.westpharma.service.api.BlockChainService;
 import com.thirdwayv.westpharma.service.api.BlockService;
 import com.thirdwayv.westpharma.service.api.TransactionService;
 import com.thirdwayv.westpharma.util.BlockConcurrancyManager;
-import com.thirdwayv.westpharma.util.HashingUtils;
 import com.thirdwayv.westpharma.util.SystemConfig;
 
 @Service
@@ -34,6 +31,9 @@ public class BlockChainServiceImpl implements BlockChainService {
 	@Autowired
 	private SystemConfig sysConfig;
 
+	@Autowired
+	private TransactionConverter transactionConverter;
+
 	// TODO: blocking issue
 	@Transactional
 	public TransactionDTO saveTransaction(TransactionDTO transactionDTO) throws Exception {
@@ -42,9 +42,11 @@ public class BlockChainServiceImpl implements BlockChainService {
 			logger.debug("trying acquiring service lock...");
 			if (BlockConcurrancyManager.lock()) {
 				logger.debug("Acquireing service lock successfully");
+				
 				Block latestBlock = blockService.getLatestBlock();
 				saveTransaction(transactionDTO, latestBlock);
 				updateBlock(latestBlock);
+				
 				BlockConcurrancyManager.unlock();
 				logger.debug("Releasing service lock successfully");
 				break;
@@ -76,30 +78,9 @@ public class BlockChainServiceImpl implements BlockChainService {
 	}
 
 	private Transaction buildTransactionEntity(TransactionDTO transactionDTO, Block block) throws BlockChainException {
-		Transaction tx = new Transaction();
+		Transaction tx = transactionConverter.toEntity(transactionDTO);
 		tx.setBlock(block);
 		tx.setIndex(block.getTransactionsNumber() + 1);
-		try {
-			tx.setCreationTime(transactionDTO.getTime() != null ? new Timestamp(transactionDTO.getTime()) : null);
-
-			if (transactionDTO.getHash() == null) {
-				tx.setWriterId(transactionDTO.getWriterId());
-				tx.setTagId(transactionDTO.getTagId());
-				tx.setLength(transactionDTO.getTransactionJson() != null ? transactionDTO.getTransactionJson().length()
-						: null);
-				tx.setTransaction(transactionDTO.getTransactionJson());
-
-				tx.setHash(HashingUtils.generateHashBySHA256(transactionDTO.getTransactionJson()));
-				tx.setSignature(HashingUtils.generateHashBySHA256(tx.getWriterId(), tx.getTagId(),
-						tx.getCreationTime().getTime(), tx.getLength(), tx.getHash()));
-			} else {
-				tx.setHash(transactionDTO.getHash());
-				tx.setSignature(HashingUtils.generateHashBySHA256(tx.getHash()));
-			}
-		} catch (NoSuchAlgorithmException e) {
-			throw new BlockChainException("Can't Hash transaction json", e);
-		}
-
 		return tx;
 	}
 

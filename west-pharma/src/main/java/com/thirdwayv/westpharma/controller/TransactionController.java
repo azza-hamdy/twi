@@ -1,6 +1,5 @@
 package com.thirdwayv.westpharma.controller;
 
-import java.sql.Timestamp;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.thirdwayv.westpharma.dto.TransactionDTO;
-import com.thirdwayv.westpharma.exception.InvalidInputException;
 import com.thirdwayv.westpharma.service.api.BlockChainService;
 import com.thirdwayv.westpharma.service.api.TransactionService;
 import com.thirdwayv.westpharma.service.validator.TransactionValidator;

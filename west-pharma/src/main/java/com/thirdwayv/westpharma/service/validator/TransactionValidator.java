@@ -14,7 +14,7 @@ public class TransactionValidator {
 
 		if (txDTO.getHash() == null || txDTO.getHash().isEmpty()) {
 			if (txDTO.getTransactionJson() == null || txDTO.getTransactionJson().isEmpty()) {
-				throw new InvalidInputException("Send Transaction JSON OR Transactio Hash");
+				throw new InvalidInputException("Send Transaction JSON OR Transaction Hash");
 			}
 		}
 
@@ -43,7 +43,6 @@ public class TransactionValidator {
 	}
 
 	public void validateInputString(String input) throws InvalidInputException {
-		// if(!input.matches("([a-zA-Z]|[0-9])+"))
 		if (input != null && input.isEmpty()) {
 			throw new InvalidInputException("Input must not be Empty");
 		}
