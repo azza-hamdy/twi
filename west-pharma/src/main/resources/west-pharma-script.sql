@@ -44,4 +44,4 @@ CREATE TABLE public.transaction
       ON UPDATE CASCADE ON DELETE CASCADE
 );
 -- Genesis Block
-INSERT INTO public.block(version, blockNumber, transactionsNumber, previousBlockHash) VALUES (0, 0, 0, 'NULL');
+INSERT INTO public.block(version, blockNumber, transactionsNumber, previousBlockHash) VALUES (1, 0, 0, 'NULL');

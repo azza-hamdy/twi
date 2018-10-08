@@ -29,8 +29,8 @@ public class BlockServiceImpl implements BlockService {
 
 	private static final Logger logger = LoggerFactory.getLogger(BlockServiceImpl.class);
 
-//	private static final int MERKAL_TREE_BLOCK_VERSION = 1;
-	private static final int SEQUANCIAL_BLOCK_VERSION = 0;
+	private static final int MERKAL_TREE_BLOCK_VERSION = 1;
+//	private static final int SEQUANCIAL_BLOCK_VERSION = 0;
 
 	@Autowired
 	private BlockRepo repo;
@@ -102,20 +102,22 @@ public class BlockServiceImpl implements BlockService {
 		calcSignature(latestBlock);
 	}
 
-	// TODO: generate top hash using Markel tree
 	private void calcTopHash(Block latestBlock) throws BlockChainException {
-		List<Transaction> transactions = new ArrayList<>();
-		StringBuilder sb = new StringBuilder();
-		for (Transaction tx : transactions) {
-			sb.append(tx.getSignature());
-		}
-
 		try {
-			latestBlock.setTopHash(HashingUtils.generateHashBySHA256(sb.toString()));
+			List<String> hashes = getTxHashesAsList(latestBlock);
+			latestBlock.setTopHash(HashingUtils.generateHashByMerkleTree(hashes));
 		} catch (NoSuchAlgorithmException e) {
 			throw new BlockChainException("Can't Generate Block Top Hash", e);
 		}
+	}
 
+	private List<String> getTxHashesAsList(Block latestBlock) {
+		List<String> hashes = new ArrayList<>();
+
+		for (Transaction tx : latestBlock.getTransactions()) {
+			hashes.add(tx.getSignature());
+		}
+		return hashes;
 	}
 
 	private void calcSignature(Block latestBlock) throws BlockChainException {
@@ -133,7 +135,7 @@ public class BlockServiceImpl implements BlockService {
 	private Block initNewBlock(Block latestBlock) {
 		Block block = new Block();
 
-		block.setVersion(SEQUANCIAL_BLOCK_VERSION);
+		block.setVersion(MERKAL_TREE_BLOCK_VERSION);
 		block.setBlockNumber(repo.count());
 		block.setTransactionsNumber(0);
 		block.setPreviousBlockHash(latestBlock.getSignature());
