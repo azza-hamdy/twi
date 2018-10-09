@@ -52,7 +52,7 @@ public class BlockServiceImpl implements BlockService {
 		return repo.save(block);
 	}
 
-	@Scheduled(cron = "0 0 0 * * *")
+	@Scheduled(cron = "${cron.expression}")
 	public void updateBlockchainPeriodically() throws BlockChainException {
 		logger.debug("try to form the latest block at: " + new Date().toString());
 		while (true) {

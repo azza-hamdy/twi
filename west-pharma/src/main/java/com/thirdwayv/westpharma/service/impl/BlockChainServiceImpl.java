@@ -69,7 +69,7 @@ public class BlockChainServiceImpl implements BlockChainService {
 	private void saveTransaction(TransactionDTO transactionDTO, Block latestBlock) throws BlockChainException {
 		Transaction txEntity = buildTransactionEntity(transactionDTO, latestBlock);
 		txEntity = getTransactionService().save(txEntity);
-		transactionDTO.setHash(txEntity.getSignature());
+		transactionDTO.setHash(txEntity.getHash());
 		transactionDTO.setBlockNumber(latestBlock.getBlockNumber());
 	}
 
