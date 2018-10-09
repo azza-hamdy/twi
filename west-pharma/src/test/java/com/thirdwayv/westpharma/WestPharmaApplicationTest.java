@@ -48,11 +48,13 @@ public class WestPharmaApplicationTest {
 
 	@Test
 	public void testSaveTxWithHash() throws Exception {
-		TransactionDTO tx = new TransactionDTO();
-		tx.setHash(generateRandomStringWithLength(SHA256_HASH_LENGTH));
-		tx.setTime(new Date().getTime());
-		TransactionDTO savedTransaction = blockChainService.saveTransaction(tx);
-		assertNotNull(savedTransaction.getBlockNumber());
+//		for (int i = 0; i < 1000; i++) {
+			TransactionDTO tx = new TransactionDTO();
+			tx.setHash(generateRandomStringWithLength(SHA256_HASH_LENGTH));
+			tx.setTime(new Date().getTime());
+			TransactionDTO savedTransaction = blockChainService.saveTransaction(tx);
+			assertNotNull(savedTransaction.getBlockNumber());
+//		}
 	}
 
 	@Test
