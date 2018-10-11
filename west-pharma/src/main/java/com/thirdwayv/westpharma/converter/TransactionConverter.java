@@ -22,7 +22,7 @@ public class TransactionConverter {
 		dto.setTime(entity.getCreationTime().getTime());
 		dto.setHash(entity.getHash());
 		dto.setTransactionJson(entity.getTransaction());
-
+		dto.setSystemId(entity.getSystemId());
 		return dto;
 	}
 
@@ -30,6 +30,7 @@ public class TransactionConverter {
 		Transaction tx = new Transaction();
 		try {
 			tx.setCreationTime(new Timestamp(transactionDTO.getTime()));
+			tx.setSystemId(transactionDTO.getSystemId());
 
 			if (transactionDTO.getHash() == null) {
 				tx.setWriterId(transactionDTO.getWriterId());
@@ -38,8 +39,8 @@ public class TransactionConverter {
 				tx.setTransaction(transactionDTO.getTransactionJson());
 
 				tx.setHash(HashingUtils.generateHashBySHA256(transactionDTO.getTransactionJson()));
-				tx.setSignature(HashingUtils.generateHashBySHA256(tx.getWriterId(), tx.getTagId(),
-						tx.getCreationTime().getTime(), tx.getLength(), tx.getHash()));
+				tx.setSignature(HashingUtils.generateHashBySHA256(tx.getSystemId(),tx.getWriterId(), tx.getTagId(),
+				tx.getCreationTime().getTime(), tx.getLength(), tx.getHash()));
 			} else {
 				tx.setHash(transactionDTO.getHash());
 				tx.setSignature(HashingUtils.generateHashBySHA256(tx.getHash()));

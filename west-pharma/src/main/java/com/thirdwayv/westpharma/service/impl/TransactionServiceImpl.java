@@ -103,4 +103,15 @@ public class TransactionServiceImpl implements TransactionService {
 		return txDTOs;
 	}
 
+	@Override
+	public List<TransactionDTO> getTransactionBySystemId(Integer systemId) throws TransactionNotFoundException {
+		List<Transaction> transactions = repo.findBySystemId(systemId);
+		if (transactions == null || transactions.isEmpty()) {
+			throw new TransactionNotFoundException("There is no transactions with this system ID: " + systemId);
+		}
+
+		return convertTransactionsToDTOs(transactions);
+
+	}
+
 }

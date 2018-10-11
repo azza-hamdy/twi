@@ -14,6 +14,8 @@ public interface TransactionService {
 
 	List<TransactionDTO> getTransactionByWriterId(String writerId) throws TransactionNotFoundException;
 
+	List<TransactionDTO> getTransactionBySystemId(Integer systemId) throws TransactionNotFoundException;
+	
 	List<TransactionDTO> getTransactionWithinSpecificPeriod(Long from, Long to);
 
 	TransactionDTO getTransactionDetails(Long blockNumber, Integer transactionIndex)

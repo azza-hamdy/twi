@@ -29,6 +29,7 @@ CREATE TABLE public.transaction
 (
   id bigint NOT NULL DEFAULT nextval('transaction_id_seq'::regclass),
   blockNumber bigint NOT NULL,
+  systemId INTEGER not NULL,
   version character varying,
   writerId character varying,
   tagId character varying,

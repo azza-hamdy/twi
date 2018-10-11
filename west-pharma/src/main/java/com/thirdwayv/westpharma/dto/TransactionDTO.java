@@ -8,7 +8,8 @@ public class TransactionDTO {
 	private Long time;
 	private String hash;
 	private String transactionJson;
-
+	private Integer systemId;
+	
 	public Long getBlockNumber() {
 		return blockNumber;
 	}
@@ -55,6 +56,14 @@ public class TransactionDTO {
 
 	public void setTransactionJson(String transactionJson) {
 		this.transactionJson = transactionJson;
+	}
+
+	public Integer getSystemId() {
+		return systemId;
+	}
+
+	public void setSystemId(Integer systemId) {
+		this.systemId = systemId;
 	}
 
 }

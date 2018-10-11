@@ -52,6 +52,7 @@ public class WestPharmaApplicationTest {
 			TransactionDTO tx = new TransactionDTO();
 			tx.setHash(generateRandomStringWithLength(SHA256_HASH_LENGTH));
 			tx.setTime(new Date().getTime());
+			tx.setSystemId(2010);
 			TransactionDTO savedTransaction = blockChainService.saveTransaction(tx);
 			assertNotNull(savedTransaction.getBlockNumber());
 //		}
@@ -100,9 +101,10 @@ public class WestPharmaApplicationTest {
 		tx.setTagId(String.valueOf(new Random().nextInt(100000)));
 		byte[] strBytes = new byte[20];
 		new Random().nextBytes(strBytes);
+		tx.setSystemId(2020);
 		tx.setWriterId(generateRandomStringWithLength(20));
 		tx.setTime(new Date().getTime());
-		tx.setTransactionJson("{\"tagId\":\"" + tx.getTagId() + "\", \"WrtiterId\":\"" + tx.getWriterId() + "\"}");
+		tx.setTransactionJson("{\"tagId\":\"" + tx.getTagId() +"\", \"SystemId\":\""+tx.getSystemId() +"\", \"WrtiterId\":\"" + tx.getWriterId() + "\"}");
 		return tx;
 	}
 

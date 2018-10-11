@@ -32,7 +32,10 @@ public class Transaction implements Serializable {
 
 	@Column(name = "tagid")
 	private String tagId;
-
+	
+	@Column(name = "systemid")
+	private Integer systemId;
+	
 	private Integer length;
 
 	private String hash;
@@ -137,5 +140,14 @@ public class Transaction implements Serializable {
 	public void setBlock(Block block) {
 		this.block = block;
 	}
+	
+	public Integer getSystemId() {
+		return systemId;
+	}
+
+	public void setSystemId(Integer systemId) {
+		this.systemId = systemId;
+	}
+
 
 }

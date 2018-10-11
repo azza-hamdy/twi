@@ -16,7 +16,7 @@ import com.thirdwayv.westpharma.service.api.TransactionService;
 import com.thirdwayv.westpharma.service.validator.TransactionValidator;
 
 @RestController
-@RequestMapping(value = "/api/transaction")
+@RequestMapping(value = "/transaction")
 public class TransactionController {
 
 	@Autowired
@@ -51,6 +51,12 @@ public class TransactionController {
 	public List<TransactionDTO> getTransactionByWriterd(@RequestParam("writer") String writerId) throws Exception {
 		validator.validateInputString(writerId);
 		return transactionService.getTransactionByWriterId(writerId);
+	}
+	
+	@GetMapping("/readbysystem")
+	public List<TransactionDTO> getTransactionBySystemId(@RequestParam("system") Integer systemId) throws Exception {
+		validator.validateInputNumber(systemId);
+		return transactionService.getTransactionBySystemId(systemId);
 	}
 
 	@GetMapping("/readwithintime")

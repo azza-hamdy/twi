@@ -21,7 +21,9 @@ public interface TransactionRepo extends JpaRepository<Transaction, Long> {
 	List<Transaction> findByCreationTimeBetween(Timestamp from, Timestamp to);
 
 	List<Transaction> findByBlockBlockNumber(Long blockNumber);
-
+	
+	List<Transaction> findBySystemId(Integer systemId);
+	
 	Optional<Transaction> findByBlockBlockNumberAndIndex(Long blockNumber, Integer transactionIndex);
 
 }

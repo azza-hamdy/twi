@@ -21,6 +21,10 @@ public class TransactionValidator {
 		if (txDTO.getTime() == null) {
 			throw new InvalidInputException("Transaction Time is Mandatory");
 		}
+		
+		if(txDTO.getSystemId()== null) {
+			throw new InvalidInputException("System Id is Mandatory");
+		}
 	}
 
 	public void validateDates(Long from, Long to) throws InvalidInputException {
@@ -49,12 +53,12 @@ public class TransactionValidator {
 
 	}
 
-	public void validateInputNumber(Long input) throws InvalidInputException {
+	public void validateInputNumber(Number input) throws InvalidInputException {
 		if (input == null) {
 			throw new InvalidInputException("Input is Required");
 		}
 
-		if (input < 0) {
+		if (input.longValue() < 0 ) {
 			throw new InvalidInputException("Input must be Positive");
 		}
 

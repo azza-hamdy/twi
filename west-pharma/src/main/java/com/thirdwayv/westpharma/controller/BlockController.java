@@ -10,7 +10,7 @@ import com.thirdwayv.westpharma.dto.BlockHeaderDTO;
 import com.thirdwayv.westpharma.service.api.BlockService;
 
 @RestController
-@RequestMapping(value = "/api/block")
+@RequestMapping(value = "/block")
 public class BlockController {
 
 	@Autowired
